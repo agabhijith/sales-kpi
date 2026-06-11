@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A premium, modern Sales KPI Dashboard with real-time analytics, interactive visualizations, and transaction tracking.">
+  <title>Sales Analytics | Enterprise KPI Dashboard</title>
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- Top Header -->
+    <header>
+      <div class="brand-section">
+        <div class="logo-container">S</div>
+        <div class="brand-details">
+          <h1>SalesPulse</h1>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>Live System Active</span>
+          </div>
+        </div>
+      </div>
+      <div class="controls-section">
+        <button id="open-modal-btn" class="btn" aria-label="Add new transaction">
+          <i data-lucide="plus-circle"></i>
+          <span>Log New Sale</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sub-header Filter Bar -->
+    <section class="filter-bar">
+      <div>
+        <h2 style="font-size: 1.15rem; font-weight: 500; color: var(--text-muted);">Performances Overview</h2>
+      </div>
+      <div class="timeframe-selector" role="group" aria-label="Timeframe selector">
+        <button class="timeframe-btn active" data-timeframe="30days">Last 30 Days</button>
+        <button class="timeframe-btn" data-timeframe="7days">Last 7 Days</button>
+        <button class="timeframe-btn" data-timeframe="year">Year to Date</button>
+        <button class="timeframe-btn" data-timeframe="all">All-Time</button>
+      </div>
+    </section>
+
+    <!-- KPI Metric Cards Grid -->
+    <section class="kpi-grid">
+      <!-- Card 1: Total Revenue -->
+      <div class="kpi-card" tabindex="0">
+        <div class="kpi-header">
+          <span class="kpi-title">Total Revenue</span>
+          <div class="kpi-icon revenue">
+            <i data-lucide="dollar-sign"></i>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-revenue">$0.00</div>
+        <div class="kpi-trend" id="trend-revenue">
+          <i data-lucide="trending-up"></i>
+          <span>0% vs last period</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Total Orders -->
+      <div class="kpi-card" tabindex="0">
+        <div class="kpi-header">
+          <span class="kpi-title">Total Orders</span>
+          <div class="kpi-icon orders">
+            <i data-lucide="shopping-bag"></i>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-orders">0</div>
+        <div class="kpi-trend" id="trend-orders">
+          <i data-lucide="trending-up"></i>
+          <span>0% vs last period</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Average Order Value -->
+      <div class="kpi-card" tabindex="0">
+        <div class="kpi-header">
+          <span class="kpi-title">Avg Order Value</span>
+          <div class="kpi-icon aov">
+            <i data-lucide="credit-card"></i>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-aov">$0.00</div>
+        <div class="kpi-trend" id="trend-aov">
+          <i data-lucide="trending-up"></i>
+          <span>0% vs last period</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Conversion Rate -->
+      <div class="kpi-card" tabindex="0">
+        <div class="kpi-header">
+          <span class="kpi-title">Conversion Rate</span>
+          <div class="kpi-icon conversion">
+            <i data-lucide="percent"></i>
+          </div>
+        </div>
+        <div class="kpi-value" id="kpi-conversion">0.00%</div>
+        <div class="kpi-trend" id="trend-conversion">
+          <i data-lucide="trending-up"></i>
+          <span>0% vs last period</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visualizations / Charts Grid -->
+    <section class="charts-grid">
+      <!-- Chart 1: Monthly Sales Trend -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Sales Trend Over Time</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Continuous Revenue Flow</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Sales by Region -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Regional Distribution</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Geographical Split</span>
+        </div>
+        <div class="chart-body">
+          <canvas id="regionChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transactions Data Table Section -->
+    <section class="data-section">
+      <div class="section-header">
+        <h3 class="section-title">Recent Sales Records</h3>
+        <div class="table-controls">
+          <!-- Search input -->
+          <div class="search-box">
+            <i data-lucide="search"></i>
+            <input type="text" id="search-input" placeholder="Search customer or region...">
+          </div>
+          <!-- Region filter select -->
+          <select id="region-filter" class="filter-select">
+            <option value="all">All Regions</option>
+            <option value="North America">North America</option>
+            <option value="Europe">Europe</option>
+            <option value="Asia Pacific">Asia Pacific</option>
+            <option value="Latin America">Latin America</option>
+          </select>
+          <!-- Status filter select -->
+          <select id="status-filter" class="filter-select">
+            <option value="all">All Statuses</option>
+            <option value="completed">Completed</option>
+            <option value="processing">Processing</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Scrollable table wrapper -->
+      <div class="table-wrapper">
+        <table id="sales-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Region</th>
+              <th>Traffic Source</th>
+              <th>Revenue</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="sales-tbody">
+            <!-- Programmatically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Add Sale Modal Overlay -->
+  <div class="modal-overlay" id="add-sale-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Log New Sales Transaction</h3>
+        <button class="close-btn" id="close-modal-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="add-sale-form">
+        <div class="form-group">
+          <label for="customer-name">Customer Name</label>
+          <input type="text" id="customer-name" class="form-input" required placeholder="e.g. Acme Corp">
+        </div>
+        <div class="form-group">
+          <label for="sale-amount">Sale Amount (USD)</label>
+          <input type="number" id="sale-amount" class="form-input" step="0.01" min="1" required placeholder="e.g. 1250.00">
+        </div>
+        <div class="form-group">
+          <label for="sale-region">Region</label>
+          <select id="sale-region" class="form-input" required>
+            <option value="" disabled selected>Select Region</option>
+            <option value="North America">North America</option>
+            <option value="Europe">Europe</option>
+            <option value="Asia Pacific">Asia Pacific</option>
+            <option value="Latin America">Latin America</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sale-source">Traffic Source</label>
+          <select id="sale-source" class="form-input" required>
+            <option value="" disabled selected>Select Source</option>
+            <option value="Direct">Direct</option>
+            <option value="Organic Search">Organic Search</option>
+            <option value="Paid Ad">Paid Ad</option>
+            <option value="Social Media">Social Media</option>
+            <option value="Email Referral">Email Referral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sale-status">Status</label>
+          <select id="sale-status" class="form-input" required>
+            <option value="completed">Completed</option>
+            <option value="processing">Processing</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-modal-btn">Cancel</button>
+          <button type="submit" class="btn">Add Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CDN scripts -->
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+  
+  <!-- App JavaScript logic -->
+  <script src="app.js"></script>
+</body>
+</html>
